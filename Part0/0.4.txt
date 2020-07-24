@@ -1,0 +1,16 @@
+title Full Stack 0.4
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note - Post a new note
+server-->browser: No response data with POST
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes - Get HTML code
+server-->browser: HTML-code (h1 and form)
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css - Get CSS code
+server-->browser: CSS-code
+browser->server: HTTP GET ttps://fullstack-exampleapp.herokuapp.com/main.js - Get JS code
+server-->browser:JS-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json - Get note data
+server-->browser: Notes in JSON format
+
+note over browser: Reloads the web page when the submit event is triggered
+
+

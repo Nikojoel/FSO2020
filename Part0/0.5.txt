@@ -1,0 +1,15 @@
+title Full Stack 0.5
+
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+server-->browser: HTML-code (h1 and form)
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server-->browser: CSS-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+server-->browser: JS-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+server-->browser:Notes in JSON format
+
+note over browser: Submitting a new note triggers an event that re-renders notes without reloading the page
+
+

@@ -1,0 +1,13 @@
+title Full Stack 0.6
+
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa - Post a new note
+server-->browser: Message that the note was created
+
+
+note over browser: Re-renders elements when a new note is created
+
+
+
+
+
