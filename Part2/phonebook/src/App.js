@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import Filter from "./components/Filter"
 import PersonForm from "./components/PersonForm"
 import Persons from "./components/Persons"
+import Notification from "./components/Notification";
 import APIService from "./services/API"
 
 const App = () => {
@@ -9,6 +10,8 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filterValue, setNewFilterValue] = useState('')
+    const [error, setError] = useState(null)
+    const [styleClass, setClass] = useState('')
 
     const getPersons = () => {
         APIService.getAll().then(response => {
@@ -19,21 +22,34 @@ const App = () => {
 
     const addName = () => {
         const data = {name: newName, number: newNumber}
-        APIService.create(data).then(response => {
-            setPersons(persons.concat(response))
+            APIService.create(data).then(response => {
+                setPersons(persons.concat(response))
+                setNewName("")
+                setNewNumber("")
+                setClass("success")
+                setError(`Added ${newName}`)
+                setTimeout(() => {
+                    setError(null)
+                }, 5000)
         })
-        setNewName("")
-        setNewNumber("")
     }
 
     const updateName = (id) => {
         const data = {name: newName, number: newNumber}
-        APIService.update(id, data).then(response => {
-            console.log(response)
-            getPersons()
-            setNewName("")
-            setNewNumber("")
-        })
+            APIService.update(id, data).then(() => {
+                getPersons()
+                setNewName("")
+                setNewNumber("")
+                setClass("success")
+                setError(`Updated ${newName}`)
+                setTimeout(() => {
+                    setError(null)
+                }, 5000)
+            }).catch(e => {
+                console.log(e)
+                setClass("error")
+                setError(`${newName} was already removed from the server`)
+            })
     }
 
     const removeName = (id) => {
@@ -58,6 +74,7 @@ const App = () => {
 
     return (
         <div>
+            <Notification message={error} className={styleClass}/>
             <h2>Phonebook</h2>
             <Filter persons={persons} filterValue={filterValue} handleFilterInput={handleFilterInput}/>
             <PersonForm
