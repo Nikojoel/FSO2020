@@ -17,6 +17,29 @@ const App = () => {
     }
     useEffect(getPersons, [])
 
+    const addName = () => {
+        const data = {name: newName, number: newNumber}
+        APIService.create(data).then(response => {
+            setPersons(persons.concat(response))
+        })
+        setNewName("")
+        setNewNumber("")
+    }
+
+    const updateName = (id) => {
+        const data = {name: newName, number: newNumber}
+        APIService.update(id, data).then(response => {
+            console.log(response)
+            getPersons()
+            setNewName("")
+            setNewNumber("")
+        })
+    }
+
+    const removeName = (id) => {
+        APIService.remove(id).then(getPersons)
+    }
+
     const handleNameInput = (event) => {
         setNewName(event.target.value)
     }
@@ -27,15 +50,6 @@ const App = () => {
 
     const handleFilterInput = (event) => {
         setNewFilterValue(event.target.value)
-    }
-
-    const addName = () => {
-        const data = {name: newName, number: newNumber}
-        APIService.create(data).then(response => {
-            setPersons(persons.concat(response))
-        })
-        setNewName("")
-        setNewNumber("")
     }
 
     const checkName = (checkable) => {
@@ -53,8 +67,9 @@ const App = () => {
                 newNumber={newNumber}
                 addName={addName}
                 checkName={checkName}
+                updateName={updateName}
             />
-            <Persons persons={persons}/>
+            <Persons persons={persons} remove={removeName}/>
         </div>
     )
 }

@@ -16,10 +16,10 @@ const PersonForm = (props) => {
                         e.preventDefault()
                         if (props.checkName(props.newName) === undefined) {
                             props.addName()
-                        } else {
-                            window.alert(`${props.newName} is already on the phone book`)
+                        } else if (window.confirm(`${props.newName} is already on the phone book, replace the old number with a new one?`)) {
+                            props.updateName(props.checkName(props.newName).id)
                         }
-                    }}>add
+                    }}>Add
                     </button>
                 </div>
             </form>
