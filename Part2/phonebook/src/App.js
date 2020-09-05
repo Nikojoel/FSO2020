@@ -31,7 +31,14 @@ const App = () => {
                 setTimeout(() => {
                     setError(null)
                 }, 5000)
-        })
+        }).catch(e => {
+            console.log(e)
+            setClass("error")
+            setError(e.response.data.error)
+                setTimeout(() => {
+                    setError(null)
+                }, 5000)
+            })
     }
 
     const updateName = (id) => {
@@ -49,6 +56,9 @@ const App = () => {
                 console.log(e)
                 setClass("error")
                 setError(`${newName} was already removed from the server`)
+                setTimeout(() => {
+                    setError(null)
+                }, 5000)
             })
     }
 
