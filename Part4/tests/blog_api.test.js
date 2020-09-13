@@ -5,10 +5,8 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('../utils/blog_helper')
 
-
 beforeEach(async () => {
     await Blog.deleteMany({})
-
     await Blog.insertMany(helper.initialBlogs)
 })
 
@@ -53,54 +51,7 @@ describe("HTTP POST", () => {
             .expect(400)
     })
 })
-/*
 
-test('blogs are returned as json', async () => {
-    const response = await api.get('/api/blogs')
-
-    expect(response.body).toHaveLength(initialBlogs.length)
-})
-
-test('there are two blogs', async () => {
-    const response = await api.get('/api/blogs')
-
-    expect(response.body).toHaveLength(2)
-})
-
-test('a specific blog is within the returned blogs', async () => {
-    const response = await api.get('/api/blogs')
-
-    const contents = response.body.map(r => r.title)
-
-    expect(contents).toContain(
-        'title123'
-    )
-})
-
-test('a valid blog can be added', async () => {
-    const newBlog = {
-        title: "valid title",
-        author: "Valid Valid",
-        url: "www.valid.com",
-        likes: 50,
-    }
-
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-
-    const response = await api.get('/api/blogs')
-
-    const contents = response.body.map(r => r.title)
-
-    expect(response.body).toHaveLength(initialBlogs.length + 1)
-    expect(contents).toContain(
-        'valid title'
-    )
-})
- */
 afterAll(() => {
     mongoose.connection.close()
 })

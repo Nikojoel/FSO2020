@@ -38,7 +38,6 @@ const getAll = async () => {
     return await Blog.find({})
 }
 
-
 module.exports = {
     initialBlogs,
     newBlog,
