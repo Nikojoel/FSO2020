@@ -1,8 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import Blog from './components/Blog'
-import Notification from "./components/Notification";
+import Notification from "./components/Notification"
 import blogService from './services/blogs'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import BlogForm from "./components/BlogForm"
+import Togglable from "./components/Togglable"
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -23,6 +26,7 @@ const App = () => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON)
+            console.log(user)
             setUser(user)
             blogService.setToken(user.token)
         }
@@ -71,6 +75,34 @@ const App = () => {
         }
     }
 
+    const likeBlog = async (blog) => {
+        try {
+            const newBlog = {
+                title: blog.title,
+                url: blog.url,
+                author: blog.author,
+                likes: blog.likes + 1,
+            }
+            await blogService.update(blog.id, newBlog)
+            setNotification(`Liked a post`, "success")
+            await getAllBlogs()
+        } catch (exception) {
+            setNotification("Error in liking", "error")
+        }
+    }
+
+    const deleteBlog = async (blog) => {
+        if (window.confirm(`Do you really want to delete ${blog.title} by ${blog.author}`)) {
+            try {
+                await blogService.remove(blog.id)
+                setNotification(`Removed blog`, "success")
+                await getAllBlogs()
+            } catch (exception) {
+                setNotification("Error in deleting", "error")
+            }
+        }
+    }
+
     const handleTitleChange = (event) => {
         setNewTitle(event.target.value)
     }
@@ -99,58 +131,35 @@ const App = () => {
         }, 5000)
     }
 
-    const loginForm = () => (
-        <form onSubmit={handleLogin}>
-            <h2>Login</h2>
-            <div>
-                username
-                <input
-                    type="text"
-                    value={username}
-                    name="Username"
-                    onChange={({target}) => setUsername(target.value)}
+    const loginForm = () => {
+        return (
+            <Togglable buttonLabel="login">
+                <LoginForm
+                    username={username}
+                    password={password}
+                    handleUsernameChange={({ target }) => setUsername(target.value)}
+                    handlePasswordChange={({ target }) => setPassword(target.value)}
+                    handleSubmit={handleLogin}
                 />
-            </div>
-            <div>
-                password
-                <input
-                    type="password"
-                    value={password}
-                    name="Password"
-                    onChange={({target}) => setPassword(target.value)}
-                />
-            </div>
-            <button type="submit">login</button>
-        </form>
-    )
+            </Togglable>
+        )
+    }
 
-    const blogForm = () => (
-        <form onSubmit={addBlog}>
-            <h2>Add blog</h2>
-            <div>
-                <input
-                    placeholder="Title"
-                    value={newTitle}
-                    onChange={handleTitleChange}
+    const blogForm = () => {
+        return (
+            <Togglable buttonLabel="create new blog">
+                <BlogForm
+                    newTitle={newTitle}
+                    newUrl={newUrl}
+                    newAuthor={newAuthor}
+                    addBlog={addBlog}
+                    handleTitleChange={handleTitleChange}
+                    handleUrlChange={handleUrlChange}
+                    handleAuthorChange={handleAuthorChange}
                 />
-            </div>
-            <div>
-                <input
-                    placeholder="Url"
-                    value={newUrl}
-                    onChange={handleUrlChange}
-                />
-                <div>
-                    <input
-                        placeholder="Author"
-                        value={newAuthor}
-                        onChange={handleAuthorChange}
-                    />
-                </div>
-            </div>
-            <button type="submit">save</button>
-        </form>
-    )
+            </Togglable>
+        )
+    }
 
 
     return (
@@ -163,9 +172,10 @@ const App = () => {
                     <button onClick={logOut}>logout</button>
                     {blogForm()}
                     <h2>Blogs</h2>
-                    {blogs.map(blog =>
-                        <Blog key={blog.id} blog={blog}/>
-                    )}
+                    {blogs
+                        .sort((a,b) => a.likes < b.likes ? 1 : -1)
+                        .map(blog => <Blog key={blog.id} blog={blog} likeBlog={likeBlog} deleteBlog={deleteBlog} user={user}/>)
+                    }
                 </div>
             }
         </div>
