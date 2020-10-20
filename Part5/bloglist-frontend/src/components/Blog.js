@@ -18,18 +18,18 @@ const Blog = ({blog, likeBlog, deleteBlog, user}) => {
             }
         </div>)
 
-return (
-    <div style={blogStyle}>
-        {blog.author}
-        {
-            isVisible ?
-                all
-                :
-                null
-        }
-        <button onClick={() => setVisible(!isVisible)}>{isVisible ? 'hide' : 'view'}</button>
-    </div>
-)
+    return (
+        <div style={blogStyle}>
+            {blog.author}
+            {
+                isVisible ?
+                    all
+                    :
+                    null
+            }
+            <button onClick={() => setVisible(!isVisible)}>{isVisible ? 'hide' : 'view'}</button>
+        </div>
+    )
 }
 
 export default Blog
