@@ -20,7 +20,7 @@ const Blog = ({blog, likeBlog, deleteBlog, user}) => {
 
     return (
         <div style={blogStyle}>
-            {blog.author}
+            <p>{blog.author} {blog.title}</p>
             {
                 isVisible ?
                     all
